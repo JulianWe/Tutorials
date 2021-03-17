@@ -1,5 +1,8 @@
 # Tutorials
 
+Authentication Guide:
+https://docs.vmware.com/en/VMware-vSphere/7.0/vsphere-esxi-vcenter-server-70-authentication-guide.pdf
+
 https://dadhacks.org/2017/12/27/building-a-root-ca-and-an-intermediate-ca-using-openssl-and-debian-stretch/
 
 curl http://dadhacks.org/wp-content/uploads/2017/12/openssl_root.cnf_.txt --out openssl_root.cnf
