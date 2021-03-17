@@ -6,13 +6,15 @@ curl http://dadhacks.org/wp-content/uploads/2017/12/openssl_root.cnf_.txt --out 
 
 
 **Generate Root private key**
+```sh
 openssl genrsa -aes256 -out private/ca.vdi.sclabs.net.key.pem 2048
 
 **Signing the root certificate**
 openssl req -config openssl_root.cnf -new -x509 -sha512 -extensions v3_ca -key /root/ca/private/ca.vdi.sclabs.net.key.pem -out /root/ca/certs/ca.vdi.sclabs.net.crt.pem -days 3650 -set_serial 0
-
+```
 
 **Creating an Intermediate Certificate Authority**
+```sh
 mkdir /root/ca/intermediate
 cd /root/ca/intermediate
 mkdir certs newcerts crl csr private
@@ -22,38 +24,48 @@ echo 1000 > /root/ca/intermediate/crlnumber
 echo '1234' > serial
 
 curl http://dadhacks.org/wp-content/uploads/2017/12/openssl_intermediate.cnf_.txt --out openssl_intermediate.cnf
-
+```
 
 **creating the private key and certificate signing rewuest for the intermediate ca**
+```sh
 openssl req -config openssl_intermediate.cnf -new -newkey 2048 -keyout /root/ca/intermediate/private/int.vdi.sclabs.net.key.pem -out /root/ca/intermediate/csr/int.vdi.sclabs.net.csr
-
+```
 **creating the intermediate certificate**
+```sh
 openssl ca -config openssl_root.cnf -extensions v3_intermediate_ca -days 3650 -notext -md sha512 -in /root/ca/intermediate/csr/int.vdi.sclabs.net.csr -out /root/ca/intermediate/certs/int.vdi.sclabs.net.crt.pem
-
+```
 **creating the certificate chain:**
+```sh
 cat intermediate/certs/int.vdi.sclabs.net.crt.pem certs/ca.vdi.sclabs.net.crt.pem > intermediate/certs/chain.vdi.sclabs.net.crt.pem
-
+```
 
 **What are all these files for?**
-So now that you have created all these files, which ones are the ones you need?
 
+So now that you have created all these files, which ones are the ones you need?
+```sh
 In /root/ca/certs, ca.DOMAINNAME.crt.pem is the Root CA certificate.
 In /root/ca/intermediate/certs, int.DOMAINNAME.crt.pem is the Intermediate CA certificate.
 In /root/ca/intermediate/certs, chain.DOMAINNAME.crt.pem is the concatenation of the Root CA certificate and the Intermediate CA certificate.
 
 curl http://dadhacks.org/wp-content/uploads/2017/12/openssl_csr_san.cnf_.txt --out openssl_csr_san.cnf
-
+```
 -> RSA
+
 **creating server certificate signing request**
+```sh
 openssl req -out intermediate/csr/jw-vcsa7.vdi.sclabs.net.csr.pem -newkey rsa:2048 -nodes -keyout intermediate/private/jw-vcsa7.vdi.sclabs.net.key.pem -config openssl_csr_san.cnf
+```
 
 **creating the server certificate by signing the signing the signing request with the intermediate ca**
+```sh
 openssl ca -config openssl_intermediate.cnf -extensions server_cert -days 3750 -notext -md sha512 -in intermediate/csr/jw-vcsa7.vdi.sclabs.net.csr.pem -out intermediate/certs/jw-vcsa7.vdi.sclabs.net.crt.pem
+```
 
 **creating a combined certificate for use with Apache server**
+```sh
 openssl pkcs12 -inkey private/ca.vdi.sclabs.net.key.pem -in certs/ca.vdi.sclabs.net.crt.pem -export -out jw-vcsa7.vdi.sclabs.net.combinedcertchain.pfx
 openssl pkcs12 -in jw-vcsa7.vdi.sclabs.net.combinedcertchain.pfx -nodes -out jw-vcsa7.vdi.sclabs.net.combined.crt
-
+```
 
 
 
