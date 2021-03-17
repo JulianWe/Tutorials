@@ -11,8 +11,10 @@ curl http://dadhacks.org/wp-content/uploads/2017/12/openssl_root.cnf_.txt --out 
 **Generate Root private key**
 ```sh
 openssl genrsa -aes256 -out private/ca.vdi.sclabs.net.key.pem 2048
+```
 
 **Signing the root certificate**
+```sh
 openssl req -config openssl_root.cnf -new -x509 -sha512 -extensions v3_ca -key /root/ca/private/ca.vdi.sclabs.net.key.pem -out /root/ca/certs/ca.vdi.sclabs.net.crt.pem -days 3650 -set_serial 0
 ```
 
@@ -45,11 +47,12 @@ cat intermediate/certs/int.vdi.sclabs.net.crt.pem certs/ca.vdi.sclabs.net.crt.pe
 **What are all these files for?**
 
 So now that you have created all these files, which ones are the ones you need?
-```sh
+
 In /root/ca/certs, ca.DOMAINNAME.crt.pem is the Root CA certificate.
 In /root/ca/intermediate/certs, int.DOMAINNAME.crt.pem is the Intermediate CA certificate.
 In /root/ca/intermediate/certs, chain.DOMAINNAME.crt.pem is the concatenation of the Root CA certificate and the Intermediate CA certificate.
 
+```sh
 curl http://dadhacks.org/wp-content/uploads/2017/12/openssl_csr_san.cnf_.txt --out openssl_csr_san.cnf
 ```
 -> RSA
