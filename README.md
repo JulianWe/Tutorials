@@ -73,11 +73,62 @@ openssl pkcs12 -inkey private/ca.vdi.sclabs.net.key.pem -in certs/ca.vdi.sclabs.
 openssl pkcs12 -in jw-vcsa7.vdi.sclabs.net.combinedcertchain.pfx -nodes -out jw-vcsa7.vdi.sclabs.net.combined.crt
 ```
 
-
+How to import the certificate:
+https://domalab.com/vcenter-trusted-root-ca-certificate/
 
 ```sh
 
-Server certificate:
+root@ansibleVM:~/ca# pwd
+/root/ca
+root@ansibleVM:~/ca# tree .
+.
+├── certs
+│   └── ca.vdi.sclabs.net.crt.pem
+├── crl
+├── index.txt
+├── index.txt.attr
+├── index.txt.attr.old
+├── index.txt.old
+├── intermediate
+│   ├── certs
+│   │   ├── chain.vdi.sclabs.net.crt.pem
+│   │   ├── int.vdi.sclabs.net.crt.pem
+│   │   └── jw-vcsa7.vdi.sclabs.net.crt.pem
+│   ├── crl
+│   ├── crlnumber
+│   ├── csr
+│   │   ├── int.vdi.sclabs.net.csr
+│   │   └── jw-vcsa7.vdi.sclabs.net.csr.pem
+│   ├── index.txt
+│   ├── index.txt.attr
+│   ├── index.txt.attr.old
+│   ├── index.txt.old
+│   ├── newcerts
+│   │   ├── 1234.pem
+│   │   └── 1235.pem
+│   ├── openssl_csr_san.cnf
+│   ├── openssl_intermediate.cnf
+│   ├── private
+│   │   ├── int.vdi.sclabs.net.key.pem
+│   │   └── jw-vcsa7.vdi.sclabs.net.key.pem
+│   ├── serial
+│   └── serial.old
+├── newcerts
+│   └── 1000.pem
+├── openssl_csr_san.cnf
+├── openssl_intermediate.cnf
+├── openssl_root.cnf
+├── private
+│   └── ca.vdi.sclabs.net.key.pem
+├── requests
+├── serial
+└── serial.old
+
+11 directories, 30 files
+root@ansibleVM:~/ca#
+
+
+Server certificate: jw-vcsa7.vdi.sclabs.net.crt.pem
 -----BEGIN CERTIFICATE-----
 MIIFGDCCBACgAwIBAgICEjUwDQYJKoZIhvcNAQENBQAwgZYxCzAJBgNVBAYTAkRF
 MRAwDgYDVQQIDAdCYXZhcmlhMQswCQYDVQQKDAJTQzESMBAGA1UECwwJY29tcHV0
@@ -112,7 +163,7 @@ iz87o+IzzgODWjEQ
 
 
 
-Certificate chain intermediate & root:
+Certificate chain intermediate (int.vdi.sclabs.net.crt.pem) & root cert (ca.vdi.sclabs.net.crt.pem):
 -----BEGIN CERTIFICATE-----
 MIIEHjCCAwagAwIBAgICEAAwDQYJKoZIhvcNAQENBQAwgaQxCzAJBgNVBAYTAkRF
 MRAwDgYDVQQIDAdCYXZhcmlhMQwwCgYDVQQHDANOQkcxCzAJBgNVBAoMAlNDMRIw
@@ -165,7 +216,7 @@ g9W+xMa+BAijWfMc8jGecX/i0pwxUicc1lneRGQep/iF5WSjHcHuGpMyj28BIoAg
 -----END CERTIFICATE-----
 
 
-Private Key:
+Private Key: jw-vcsa7.vdi.sclabs.net.key.pem
 -----BEGIN PRIVATE KEY-----
 MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCrZozIYBkZV+zG
 xCZFFn+hhO/RVpsn5at1RzVos+ntrknGeV/ZquDvjIBkOZWzK/efuRswigpVdxKe
